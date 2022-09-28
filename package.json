@@ -17,6 +17,13 @@
         "build": "tsc && vite build"
     },
     "dependencies": {
+        "@vaadin/button": "^23.2.2",
+        "@vaadin/checkbox": "^23.2.2",
+        "@vaadin/icon": "^23.2.2",
+        "@vaadin/icons": "^23.2.2",
+        "@vaadin/notification": "^23.2.2",
+        "@vaadin/password-field": "^23.2.2",
+        "@vaadin/text-field": "^23.2.2",
         "axios": "^0.27.2",
         "date-fns": "^2.29.3",
         "lit": "^2.3.1",
