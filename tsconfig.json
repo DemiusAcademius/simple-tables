@@ -1,0 +1,46 @@
+{
+    "compilerOptions": {
+        "target": "es2020",
+        "module": "ESNext",
+        "lib": [
+            "ES2020",
+            "DOM",
+            "DOM.Iterable"
+        ],
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "outDir": "./typings",
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "moduleResolution": "Node",
+        "isolatedModules": true,
+        "allowSyntheticDefaultImports": true,
+        "experimentalDecorators": true,
+        "forceConsistentCasingInFileNames": true,
+        "useDefineForClassFields": false,
+        "useUnknownInCatchVariables": false,
+        "skipLibCheck": true,
+        "paths": {
+            "@core/*": [
+                "./src/core/*"
+            ],
+            "@services/*": [
+                "./src/services/*"
+            ],
+            "@pages/*": [
+                "./src/pages/*"
+            ]
+        }
+    },
+    "include": [
+        "src/**/*.ts"
+    ],
+    "references": [
+        {
+            "path": "./tsconfig.node.json"
+        }
+    ]
+}
