@@ -89,6 +89,15 @@ export class LoginForm extends LitElement {
                 ?disabled=${this.disabled}
                 style="width: 100%; margin-top: 1em"
             >LOGIN</vaadin-button>
+
+            <div style="width: 100%; margin-top: 1em">
+                Ești aici pentru prima dată?
+            </div>
+
+            <vaadin-button
+                theme="primary"
+                style="width: 100%; margin-top: 1em"
+            >REGISTER</vaadin-button>
         </form>
         `
     }
