@@ -19,6 +19,10 @@ const styles = css`
         background-size: cover;
         background-image: url("./assets/illustration.png");
     }
+    .background {
+        flex: 0 0 calc(100% - 25rem);
+        max-width: calc(100% - 25rem);
+    }
     .login {
         display: flex;
         flex-flow: column;
@@ -68,6 +72,7 @@ export class LoginComponent extends LitElement {
 
     render() {
         return html`
+        <div class="background"></div>
         <div class="login">
             <aside>${APPLICATION}</aside>
             <main>

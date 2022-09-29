@@ -52,7 +52,6 @@ export class LoginForm extends LitElement {
 
     render() {
         return html`
-        <p>This is my first application in AWS</p>
         <form style="width: 100%" autocomplete="off">
             <fieldset style="border: none; padding: 0">
                 <input autocomplete="off" name="hidden" type="text" style="display:none;">
