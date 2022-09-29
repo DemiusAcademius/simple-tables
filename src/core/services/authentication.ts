@@ -1,5 +1,7 @@
 import axios from "axios"
 
+import { Notification } from "@vaadin/notification"
+
 import { rxStore } from "../utils/rx-store"
 import { parseQueryString } from "../utils/http"
 import type { UserInfo } from "../utils/types"
@@ -110,16 +112,40 @@ export function authentication() {
         }
     }
 
+    const testServerless = async (body: LoginRequest) => {
+        try {
+            let result = await axios.post('https://hix63inpu3.execute-api.us-east-1.amazonaws.com/dev', {
+                firstName: body.username,
+                lastName: body.password
+            })
+            let data = result.data
+
+            Notification.show(`Ok! : ${data}`, {
+                position: 'bottom-center',
+                theme: 'contrast',
+                duration: 5000
+            })
+        } catch (ex) {
+            console.error(`Test error: ${ex}`)
+            Notification.show(`Err! : ${ex}`, {
+                position: 'bottom-center',
+                theme: 'error',
+                duration: 5000
+            })
+        }
+    }
+
     const login = async (body: LoginRequest): Promise<LoginResult> => {
         try {
-            let result = await (await axios.post<AuthenticationResult>(`${AUTH_SERVICE_URL}/auth/login`, body)).data
-            if (result.authenticated) {
-                const authenticationInfo: AuthenticationInfo = { lastAuthorized: new Date().getTime(), userInfo: result.userInfo, accessToken: result.accessToken }
+            let result = await axios.post<AuthenticationResult>(`${AUTH_SERVICE_URL}/auth/login`, body)
+            let data = result.data
+            if (data.authenticated) {
+                const authenticationInfo: AuthenticationInfo = { lastAuthorized: new Date().getTime(), userInfo: data.userInfo, accessToken: data.accessToken }
                 sessionStorage.setItem(SESSION_AUTHENTICATION_INFO, JSON.stringify(authenticationInfo))
-                setLoggedIn(result.userInfo, result.accessToken)
+                setLoggedIn(data.userInfo, data.accessToken)
                 return { authenticated: true }
             } else {
-                return result
+                return data
             }
         } catch (ex) {
             // TODO: if (axios.isAxiosError(error)) {
@@ -146,7 +172,7 @@ export function authentication() {
     const getAccessToken: () => Readonly<string | null> = () => accessToken
 
     return ({
-        login, logout,
+        login, logout, testServerless,
         ready$, userInfo$,
         getAccessToken
     })

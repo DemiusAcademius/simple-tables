@@ -1,8 +1,14 @@
 import { html, css, LitElement } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
 
-import { Notification } from "@vaadin/notification"
 import { TextFieldChangeEvent } from '@vaadin/text-field'
+import { AUTHENTICATION } from '@core/services/authentication'
+import { debouncer } from '@core/utils/timers'
+
+type LoginProcess =
+    { status: 'show-form' } |
+    { status: 'process' } |
+    { status: 'error', message: string }
 
 const styles = css`
       :host {
@@ -21,6 +27,8 @@ const PERSONNEL_NUMBER_REGEXP = new RegExp(/^[0-9]+$/)
 
 @customElement('demius-login-form')
 export class LoginForm extends LitElement {
+    private loginErrorDebouncer = debouncer()
+
     static styles = styles
 
     @state()
@@ -32,12 +40,26 @@ export class LoginForm extends LitElement {
     @state()
     private disabled = true
 
+    @state()
+    private loginProcess: LoginProcess = { status: 'show-form' }
+
     private login = async () => {
-        Notification.show('Разнообразная бизнес-логика пока еще не сделана', {
-            position: 'bottom-center',
-            theme: 'contrast',
-            duration: 5000
-        })
+        this.loginProcess = { status: 'process' }
+        await AUTHENTICATION.testServerless(this.model)
+
+        this.loginErrorDebouncer.clear()
+        this.loginProcess = { status: 'show-form' }
+
+        /*
+        if (result.authenticated) {
+            this.loginErrorDebouncer.clear()
+        } else {
+            this.loginProcess = { status: 'error', message: result.message }
+            this.loginErrorDebouncer.delayed(() => {
+                this.loginProcess = { status: 'show-form' }
+            }, result.takesLongWait ? 10000 : 5000)
+        }
+        */
     }
 
     private onPasswordChanged = (e: TextFieldChangeEvent): void => {
@@ -53,7 +75,10 @@ export class LoginForm extends LitElement {
     render() {
         return html`
         <form style="width: 100%" autocomplete="off">
-            <fieldset style="border: none; padding: 0">
+            <fieldset
+                ?disabled=${this.loginProcess.status !== 'show-form'}
+                style="border: none; padding: 0"
+            >
                 <input autocomplete="off" name="hidden" type="text" style="display:none;">
 
                 <vaadin-text-field
@@ -100,4 +125,31 @@ export class LoginForm extends LitElement {
         </form>
         `
     }
+
+    renderActionBlock() {
+        return this.loginProcess.status === 'error' ?
+            html`
+                <div class="error-message">
+                    ${this.loginProcess.message}
+                </div>
+            ` :
+            html`
+            <vaadin-button
+                theme="primary"
+                @click=${this.login}
+                ?disabled=${this.disabled}
+                style="width: 100%; margin-top: 1em"
+            > ${this.loginProcess.status === 'show-form' ? 'LOGIN' : 'PRELUCREAREA DATELOR...'} </vaadin-button>
+
+            <div style="width: 100%; margin-top: 1em">
+                Ești aici pentru prima dată?
+            </div>
+
+            <vaadin-button
+                theme="primary"
+                style="width: 100%; margin-top: 1em"
+            >REGISTER</vaadin-button>
+        `
+    }
+
 }
