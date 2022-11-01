@@ -77,7 +77,7 @@ export class LoginComponent extends LitElement {
             <aside>${APPLICATION}</aside>
             <main>
                 <div class="welcome">
-                    <h2>VĂ SALUT</h2>
+                    <h2>WELCOME</h2>
                     <h4>INTRARE LA APLICAȚIE</h4>
                 </div>
                 <demius-login-form></demius-login-form>
